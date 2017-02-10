@@ -105,9 +105,15 @@ def poisson_binomial_PMF(ps, n):
 	# note (1+w)**-1 = 1-p
 	return functools.reduce(operator.mul, (1-x for x in ps), poisson_binomial_R(ps, n, range(len(ps))))
 
+############################################################################################
+###                           Constants calculations and other utils
+############################################################################################
 
+# dictionary for caching
 wis = {}
 def poisson_binomial_w_times_i(p, i=1):
+	""" omega times i as in Statistical applications of the Poisson-binomial and conditional Bernoulli distributions."
+		Statistica Sinica (1997)"""
 	if p not in wis:
 		wis[p] = [1, p/(1-p)]
 
@@ -118,21 +124,21 @@ def poisson_binomial_w_times_i(p, i=1):
 
 
 def poisson_binomial_T(ps, i, chosen):
+	""" T as in Statistical applications of the Poisson-binomial and conditional Bernoulli distributions."
+		Statistica Sinica (1997)"""
 	return np.sum((poisson_binomial_w_times_i(ps[choice],i) for choice in chosen))
 
 
 def poisson_binomial_R(ps, n, chosen):
+	""" R as in Statistical applications of the Poisson-binomial and conditional Bernoulli distributions."
+		Statistica Sinica (1997)"""
 	if len(chosen) < n:
 		return 0
 	if not n:
 		return 1
-	# pool = Pool(10) #TODO is pooling needed? and working despite recursion
 	a = np.empty((n,),int)
 	a[::2] = 1
 	a[1::2] = -1
 	it = []
-	# it += list(pool.imap(__compute_coverage, range(1,n+1)))
 	it = np.fromiter((poisson_binomial_T(ps,i,chosen)*poisson_binomial_R(ps, n-i, chosen) for i in range(1,n+1)), np.float)
-	# pool.close()
-	# pool.join()
 	return np.inner(it, a)/n
