@@ -1,8 +1,9 @@
 # PoissonBinomial
-A module with functions to compute Poisson Binomial distribution pmf cdf etc.
+A python module implementing functions to approximately or efficiently compute Poisson Binomial distribution pmf cdf std and expectation.
 
 The module implements both recursive and fft methods for computing Poisson Binomial Probability functions.
-Poisson and refined approximation are also implemented in the module.
+Poisson and the refinement of normal approximation are also implemented in the module.
+For further details on implementations see the API comments.
 
 Requirements:
 
